@@ -1,0 +1,35 @@
+{
+    "name": "nebula-md",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "pm2 start index.js --deep-monitoring --attach --name nebula",
+        "stop": "pm2 stop nebula",
+        "restart": "pm2 restart nebula && pm2 logs",
+        "stash": "git stash && git stash drop"
+    },
+    "dependencies": {
+        "@adiwajshing/keyed-db": "^0.2.4",
+        "@whiskeysockets/baileys": "github:AxellNetwork/Baileys",
+        "axios": "^1.6.8",
+        "cheerio": "^1.0.0-rc.12",
+        "express": "latest",
+        "fb-downloader-scrapper": "^2.0.0",
+        "file-type": "^16.5.3",
+        "form-data": "^4.0.0",
+        "fs-extra": "^11.1.0",
+        "link-preview-js": "^3.0.4",
+        "megajs": "^1.2.1",
+        "mime-types": "^2.1.35",
+        "node-cron": "^3.0.3",
+        "node-fetch": "^2.6.1",
+        "os": "^0.1.2",
+        "path": "^0.12.7",
+        "pino": "^7.0.5",
+        "pm2": "^5.2.0",
+        "puppeteer": "^22.7.1",
+        "qrcode-terminal": "^0.12.0",
+        "util": "^0.12.4",
+        "yt-search": "^2.10.4",
+        "ytdl-core": "^4.11.5"
+    }
+}
