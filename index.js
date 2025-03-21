@@ -159,9 +159,9 @@ async function connectToWA() {
                     quoted: mek
                 })
             }
-            const ownerdata = (await axios.get('https://gist.github.com/VajiraOfficial/c6be607bcaa75778fc4c60a941a1fbbf/raw')).data
+       /*     const ownerdata = (await axios.get('https://gist.github.com/VajiraOfficial/c6be607bcaa75778fc4c60a941a1fbbf/raw')).data
             config.LOGO = ownerdata.imageurl
-            config.FOOTER = ownerdata.footer
+            config.FOOTER = ownerdata.footer*/
             conn.edit = async (mek, newmg) => {
                 await conn.relayMessage(from, {
                     protocolMessage: {
