@@ -23,39 +23,31 @@ const resizeImage = async (buffer, width, height) => {
 
 
 cmd({
-    pattern: "alive",
-    alias: ["status", "runtime", "uptime"],
-    desc: "Check uptime and system status",
-    category: "main",
-    react: "📟",
+    pattern: "menu",
+    react: "📖",
+    alias: ["panel", "list", "commands", "cmd"],
+    desc: "Get bot\'s command list.",
+    category: "other",
+    use: '.menu',
     filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+}, async (conn, mek, m, { from, prefix, pushname, reply }) => {
     try {
-        // Generate system status message
-        const status = `╭━━〔 *KHAN-MD* 〕━━┈⊷
-┃◈╭─────────────·๏
-┃◈┃• *⏳Uptime*:  ${runtime(process.uptime())} 
-┃◈┃• *📟 Ram usage*: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
-┃◈┃• *⚙️ HostName*: ${os.hostname()}
-┃◈┃• *👨‍💻 Owner*: Jawad TechX
-┃◈┃• *🧬 Version*: 3.0.0 BETA
-┃◈└───────────┈⊷
-╰──────────────┈⊷
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Jᴀᴡᴀᴅ TᴇᴄʜX`;
+        let wm = `👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻`
+        if (os.hostname().length == 12) hostname = 'replit'
+        else if (os.hostname().length == 36) hostname = 'heroku'
+        else if (os.hostname().length == 8) hostname = 'koyeb'
+        else hostname = os.hostname()
+        let monspace = '```'
+            const MNG = `❖👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻❖
+	    
+${monspace}👋 Hello ${pushname}${monspace}
 
-        // Send the status message with an image
-        await conn.sendMessage(from, { 
-            image: { url: `https://files.catbox.moe/juroe8.jpg` },  // Image URL
-            caption: status,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363354023106228@newsletter',
-                    newsletterName: 'JawadTechX',
-                    serverMessageId: 143
+╭───═❮ *ᴍᴇɴᴜ ʟɪsᴛ* ❯═───❖
+│ *🚀𝙑𝙀𝙍𝙎𝙄𝙊𝙉:* ${require("../package.json").version}
+│ *⌛𝙈𝙀𝙈𝙊𝙍𝙔:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+│ *🕒𝙍𝙐𝙉𝙏𝙄𝙈𝙀:* ${runtime(process.uptime())}
+│ *📍𝙋𝙇𝘼𝙏𝙁𝙊𝙍𝙈:* ${hostname}
+╰━━━━━━━━━━━━━━━┈⊷`
             const categories = [];
         const categoryMap = new Map();
 
