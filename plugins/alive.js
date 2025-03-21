@@ -23,9 +23,9 @@ const resizeImage = async (buffer, width, height) => {
 
 
 cmd({
-    pattern: "menu",
+    pattern: "alive",
     react: "📖",
-    alias: ["panel", "list", "commands", "cmd"],
+    alias: ["test", "bot", "chek", "status"],
     desc: "Get bot\'s command list.",
     category: "other",
     use: '.menu',
