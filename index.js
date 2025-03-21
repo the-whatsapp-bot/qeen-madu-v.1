@@ -10,9 +10,11 @@ const {
     prepareWAMessageMedia,
     proto
 } = require('@whiskeysockets/baileys')
+
+const l = console.log
 const fs = require('fs')
 const P = require('pino')
-const config = require('./config')
+const config = require('./settings')
 const qrcode = require('qrcode-terminal')
 const NodeCache = require('node-cache')
 const util = require('util')
@@ -42,13 +44,13 @@ const msgRetryCounterCache = new NodeCache()
 const prefix = '.'
 const ownerNumber = ['94725881990']
 //===================SESSION============================
-if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
+if (!fs.existsSync(__dirname + '/lib/creds.json')) {
     if (config.SESSION_ID) {
-      const sessdata = config.SESSION_ID.replace("NEBULA=", "")
+      const sessdata = config.SESSION_ID.replace("VAJIRA-MD=", "")
       const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
       filer.download((err, data) => {
         if (err) throw err
-        fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
+        fs.writeFile(__dirname + '/lib/creds.json', data, () => {
           console.log("Session download completed !!")
         })
       })
@@ -68,7 +70,7 @@ async function connectToWA() {
     const {
         state,
         saveCreds
-    } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
+    } = await useMultiFileAuthState(__dirname + '/lib/')
     const conn = makeWASocket({
         logger: P({
             level: "fatal"
@@ -157,11 +159,9 @@ async function connectToWA() {
                     quoted: mek
                 })
             }
-            const ownerdata = (await axios.get('https://raw.githubusercontent.com/anonymous-lll/Nebula-Uploads/main/raw.json')).data
+            const ownerdata = (await axios.get('https://gist.github.com/VajiraOfficial/c6be607bcaa75778fc4c60a941a1fbbf/raw')).data
             config.LOGO = ownerdata.imageurl
-            config.BTN = ownerdata.button
             config.FOOTER = ownerdata.footer
-            config.BTNURL = ownerdata.buttonurl
             conn.edit = async (mek, newmg) => {
                 await conn.relayMessage(from, {
                     protocolMessage: {
@@ -304,162 +304,43 @@ async function connectToWA() {
                 })
             }
             //==================================plugin map================================
-            const events = require('./command')
-            const cmdName = isCmd ? body.slice(1).trim().split(" ")[0].toLowerCase() : false;
-            if (isCmd) {
-                const cmd = events.commands.find((cmd) => cmd.pattern === (cmdName)) || events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName))
-                if (cmd) {
-                    if (cmd.react) conn.sendMessage(from, {
-                        react: {
-                            text: cmd.react,
-                            key: mek.key
-                        }
-                    })
 
-                    try {
-                        cmd.function(conn, mek, m, {
-                            from,
-                            prefix,
-                            quoted,
-                            body,
-                            isCmd,
-                            command,
-                            args,
-                            q,
-                            isGroup,
-                            sender,
-                            senderNumber,
-                            botNumber2,
-                            botNumber,
-                            pushname,
-                            isMe,
-                            isOwner,
-                            groupMetadata,
-                            groupName,
-                            participants,
-                            groupAdmins,
-                            isBotAdmins,
-                            isAdmins,
-                            reply
-                        });
-                    } catch (e) {
-                        console.error("[PLUGIN ERROR] ", e);
-                    }
-                }
-            }
-            events.commands.map(async (command) => {
-                if (body && command.on === "body") {
-                    command.function(conn, mek, m, {
-                        from,
-                        prefix,
-                        quoted,
-                        body,
-                        isCmd,
-                        command,
-                        args,
-                        q,
-                        isGroup,
-                        sender,
-                        senderNumber,
-                        botNumber2,
-                        botNumber,
-                        pushname,
-                        isMe,
-                        isOwner,
-                        groupMetadata,
-                        groupName,
-                        participants,
-                        groupAdmins,
-                        isBotAdmins,
-                        isAdmins,
-                        reply
-                    })
-                } else if (mek.q && command.on === "text") {
-                    command.function(conn, mek, m, {
-                        from,
-                        quoted,
-                        body,
-                        isCmd,
-                        command,
-                        args,
-                        q,
-                        isGroup,
-                        sender,
-                        senderNumber,
-                        botNumber2,
-                        botNumber,
-                        pushname,
-                        isMe,
-                        isOwner,
-                        groupMetadata,
-                        groupName,
-                        participants,
-                        groupAdmins,
-                        isBotAdmins,
-                        isAdmins,
-                        reply
-                    })
-                } else if (
-                    (command.on === "image" || command.on === "photo") &&
-                    mek.type === "imageMessage"
-                ) {
-                    command.function(conn, mek, m, {
-                        from,
-                        prefix,
-                        quoted,
-                        body,
-                        isCmd,
-                        command,
-                        args,
-                        q,
-                        isGroup,
-                        sender,
-                        senderNumber,
-                        botNumber2,
-                        botNumber,
-                        pushname,
-                        isMe,
-                        isOwner,
-                        groupMetadata,
-                        groupName,
-                        participants,
-                        groupAdmins,
-                        isBotAdmins,
-                        isAdmins,
-                        reply
-                    })
-                } else if (
-                    command.on === "sticker" &&
-                    mek.type === "stickerMessage"
-                ) {
-                    command.function(conn, mek, m, {
-                        from,
-                        prefix,
-                        quoted,
-                        body,
-                        isCmd,
-                        command,
-                        args,
-                        q,
-                        isGroup,
-                        sender,
-                        senderNumber,
-                        botNumber2,
-                        botNumber,
-                        pushname,
-                        isMe,
-                        isOwner,
-                        groupMetadata,
-                        groupName,
-                        participants,
-                        groupAdmins,
-                        isBotAdmins,
-                        isAdmins,
-                        reply
-                    })
-                }
-            });
 
+const events = require('./lib/command')
+const cmdName = isCmd ?  command : false;
+if (isCmd) {
+  const cmd = events.commands.find((cmd) => cmd.pattern === (cmdName)) || events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName))
+  if (cmd) {
+    if (cmd.react) conn.sendMessage(from, { react: { text: cmd.react, key: mek.key } })
+
+    try {
+cmd.function(conn, mek, m, { from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply ,config });
+    } catch (e) {
+console.error("[PLUGIN ERROR] ", e);
+    }
+  }
+}
+events.commands.map(async (command) => {
+  if (body && command.on === "body") {
+    command.function(conn, mek, m, { from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply , config})
+  } else if (mek.q && command.on === "text") {
+    command.function(conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply , config })
+  } else if (
+    (command.on === "image" || command.on === "photo") &&
+    mek.type === "imageMessage"
+  ) {
+    command.function(conn, mek, m, { from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply , config })
+  } else if (
+    command.on === "sticker" &&
+    mek.type === "stickerMessage"
+  ) {
+    command.function(conn, mek, m, { from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply , config })
+  }
+});
+
+
+
+            
             switch (command) {
                 case 'jid':
                     reply(from)
@@ -479,9 +360,10 @@ async function connectToWA() {
     })
 }
 app.get("/", (req, res) => {
-    res.send("📟 Nebula Working successfully!");
+    res.send("📟 server Working successfully!");
 });
-app.listen(port, () => console.log(`Nebula Server listening on port http://localhost:${port}`));
-setTimeout(async () => {
-    await connectToWA()
-}, 1000);
+app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
+setTimeout(() => {
+connectToWA()
+}, 3000);
+    
