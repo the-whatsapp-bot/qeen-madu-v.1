@@ -1,15 +1,16 @@
 {
-    "name": "nebula-md",
-    "version": "1.0.0",
-    "scripts": {
-        "start": "pm2 start index.js --deep-monitoring --attach --name nebula",
-        "stop": "pm2 stop nebula",
-        "restart": "pm2 restart nebula && pm2 logs",
-        "stash": "git stash && git stash drop"
-    },
+  "name": "server",
+  "version": "1.0.0",
+  "description": "A WhatsApp bot created using Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start index.js --deep-monitoring --attach --name server",
+    "stop": "pm2 stop server",
+    "restart": "pm2 restart server"
+  },
     "dependencies": {
+        "@whiskeysockets/baileys": "npm:asitha-baliyes-new",
         "@adiwajshing/keyed-db": "^0.2.4",
-        "@whiskeysockets/baileys": "github:AxellNetwork/Baileys",
         "axios": "^1.6.8",
         "cheerio": "^1.0.0-rc.12",
         "express": "latest",
@@ -26,6 +27,8 @@
         "path": "^0.12.7",
         "pino": "^7.0.5",
         "pm2": "^5.2.0",
+        "async-lock": "^1.4.1",
+        "jimp": "^0.22.12",
         "puppeteer": "^22.7.1",
         "qrcode-terminal": "^0.12.0",
         "util": "^0.12.4",
