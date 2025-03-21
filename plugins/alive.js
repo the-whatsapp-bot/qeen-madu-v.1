@@ -24,11 +24,10 @@ const resizeImage = async (buffer, width, height) => {
 
 cmd({
     pattern: "alive",
-    react: "📖",
-    alias: ["test", "bot", "chek", "status"],
-    desc: "Get bot\'s command list.",
-    category: "other",
-    use: '.menu',
+    alias: ["status", "runtime", "uptime"],
+    desc: "Check uptime and system status",
+    category: "main",
+    react: "📟",
     filename: __filename
 }, async (conn, mek, m, { from, prefix, pushname, reply }) => {
     try {
